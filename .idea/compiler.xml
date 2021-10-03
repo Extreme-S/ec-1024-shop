@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="ec-common" />
+        <module name="ec-product-service" />
+        <module name="ec-gateway" />
+        <module name="ec-user-service" />
+        <module name="ec-coupon-service" />
+        <module name="ec-order-service" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>
