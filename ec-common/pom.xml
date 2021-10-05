@@ -41,6 +41,12 @@
             <artifactId>springfox-boot-starter</artifactId>
         </dependency>
 
+        <!--单元测试-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+
         <!-- 代码自动生成依赖 begin 上线后不需要，只在common中添加 -->
         <dependency>
             <groupId>com.baomidou</groupId>
