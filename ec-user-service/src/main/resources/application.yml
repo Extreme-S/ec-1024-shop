@@ -4,13 +4,17 @@ server:
 spring:
   application:
     name: ec-user-service
-  #数据库配置
+  #mysql 配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/ec_user?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
-
+  #redis 配置
+  redis:
+    host: 47.100.86.147
+    port: 8000
+    password: 123456
 
 #配置plus打印sql日志
 mybatis-plus:
