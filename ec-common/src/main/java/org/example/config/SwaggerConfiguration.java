@@ -37,7 +37,7 @@ public class SwaggerConfiguration {
                 //配置文档的元信息
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("net.xdclass"))
+                .apis(RequestHandlerSelectors.basePackage("net.ec_shop"))
                 //正则匹配请求路径，并分配到当前项目组
                 .paths(PathSelectors.ant("/api/**"))
                 .build()
@@ -55,7 +55,6 @@ public class SwaggerConfiguration {
      */
     @Bean
     public Docket adminApiDoc() {
-
         return new Docket(DocumentationType.OAS_30)
                 .groupName("管理端接口文档")
                 .pathMapping("/")
@@ -66,7 +65,7 @@ public class SwaggerConfiguration {
                 //配置文档的元信息
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("net.xdclass"))
+                .apis(RequestHandlerSelectors.basePackage("net.ec_shop"))
                 //正则匹配请求路径，并分配到当前项目组
                 .paths(PathSelectors.ant("/admin/**"))
                 .build();
@@ -77,7 +76,7 @@ public class SwaggerConfiguration {
         return new ApiInfoBuilder()
                 .title("1024电商平台")
                 .description("微服务接口文档")
-                .contact(new Contact("小滴课堂-二当家小D", "https://xdclass.net", "微信 xdclass6"))
+                .contact(new Contact("不爱吃鱼的猫丶", "https://github.com/Extreme-S", "微信号"))
                 .version("v1.0")
                 .build();
     }
@@ -108,6 +107,7 @@ public class SwaggerConfiguration {
 //                .build());
 
         return parameters;
+
     }
 
 
@@ -125,5 +125,6 @@ public class SwaggerConfiguration {
 
         return list;
     }
+
 
 }

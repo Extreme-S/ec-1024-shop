@@ -8,7 +8,6 @@ import org.example.enums.BizCodeEnum;
 public class BizException extends RuntimeException {
 
     private int code;
-
     private String msg;
 
     public BizException(int code, String msg) {
@@ -22,5 +21,6 @@ public class BizException extends RuntimeException {
         this.code = bizCodeEnum.getCode();
         this.msg = bizCodeEnum.getMessage();
     }
+
 
 }

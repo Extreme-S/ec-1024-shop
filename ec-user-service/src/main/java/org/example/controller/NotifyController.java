@@ -4,11 +4,16 @@ import com.google.code.kaptcha.Producer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.example.enums.BizCodeEnum;
+import org.example.enums.SendCodeEnum;
+import org.example.service.NotifyService;
 import org.example.util.CommonUtil;
+import org.example.util.JsonData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
@@ -31,6 +36,9 @@ public class NotifyController {
 
     @Autowired
     private StringRedisTemplate redisTemplate;
+
+    @Autowired
+    private NotifyService notifyService;
 
     /**
      * 图形验证码有效期10分钟
@@ -64,6 +72,35 @@ public class NotifyController {
             log.error("获取图形验证码异常:{}", e);
         }
     }
+
+    /**
+     * 向邮箱发送验证码
+     * 1、匹配图形验证码是否正常
+     * 2、发送验证码
+     *
+     * @param to
+     * @param captcha
+     * @return
+     */
+    @ApiOperation("发送邮箱注册验证码")
+    @GetMapping("send_code")
+    public JsonData sendRegisterCode(@RequestParam(value = "to", required = true) String to,
+                                     @RequestParam(value = "captcha", required = true) String captcha,
+                                     HttpServletRequest request) {
+        String key = getCaptchaKey(request);
+        String cacheCaptcha = redisTemplate.opsForValue().get(key);
+
+        //匹配图形验证码是否一样
+        if (captcha != null && captcha.equalsIgnoreCase(cacheCaptcha)) {
+            redisTemplate.delete(key);
+            JsonData jsonData = notifyService.sendCode(SendCodeEnum.USER_REGISTER, to);
+            return jsonData;
+        } else {
+            return JsonData.buildResult(BizCodeEnum.CODE_CAPTCHA_ERROR);
+        }
+
+    }
+
 
     /**
      * 根据用户ip和userAgent信息生成图形验证码的唯一key
