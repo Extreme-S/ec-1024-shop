@@ -2,11 +2,11 @@ package org.example.interceptor;
 
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
-import net.ec_shop.enums.BizCodeEnum;
-import net.ec_shop.model.LoginUser;
-import net.ec_shop.util.CommonUtil;
-import net.ec_shop.util.JWTUtil;
-import net.ec_shop.util.JsonData;
+import org.example.enums.BizCodeEnum;
+import org.example.model.LoginUser;
+import org.example.util.CommonUtil;
+import org.example.util.JWTUtil;
+import org.example.util.JsonData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;

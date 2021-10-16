@@ -1,7 +1,7 @@
 package org.example.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import net.ec_shop.util.JsonData;
+import org.example.util.JsonData;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
