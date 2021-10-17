@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.example.enums.BizCodeEnum;
+import org.example.request.UserLoginRequest;
 import org.example.request.UserRegisterRequest;
 import org.example.service.FileService;
 import org.example.service.UserService;
@@ -39,7 +40,6 @@ public class UserController {
             @RequestPart("file") MultipartFile file) {
 
         String result = fileService.uploadUserImg(file);
-
         return result != null ? JsonData.buildSuccess(result) : JsonData.buildResult(BizCodeEnum.FILE_UPLOAD_USER_IMG_FAIL);
     }
 
@@ -54,6 +54,19 @@ public class UserController {
     public JsonData register(@ApiParam("用户注册对象") @RequestBody UserRegisterRequest registerRequest) {
 
         JsonData jsonData = userService.register(registerRequest);
+        return jsonData;
+    }
+
+    /**
+     * 用户登录
+     *
+     * @return
+     */
+    @ApiOperation("用户登录")
+    @PostMapping("login")
+    public JsonData login(@ApiParam("用户登录对象") @RequestBody UserLoginRequest userLoginRequest) {
+
+        JsonData jsonData = userService.login(userLoginRequest);
         return jsonData;
     }
 

@@ -1,11 +1,13 @@
 package org.example.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.example.enums.BizCodeEnum;
 import org.example.enums.SendCodeEnum;
 import org.example.mapper.UserMapper;
 import org.example.model.UserDO;
+import org.example.request.UserLoginRequest;
 import org.example.request.UserRegisterRequest;
 import org.example.service.NotifyService;
 import org.example.service.UserService;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 
 
 @Service
@@ -43,13 +46,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public JsonData register(UserRegisterRequest registerRequest) {
-
         boolean checkCode = false;
         //校验验证码
         if (StringUtils.isNotBlank(registerRequest.getMail())) {
             checkCode = notifyService.checkCode(SendCodeEnum.USER_REGISTER, registerRequest.getMail(), registerRequest.getCode());
         }
-
         if (!checkCode) {
             return JsonData.buildResult(BizCodeEnum.CODE_ERROR);
         }
@@ -78,7 +79,33 @@ public class UserServiceImpl implements UserService {
         } else {
             return JsonData.buildResult(BizCodeEnum.ACCOUNT_REPEAT);
         }
+    }
 
+    /**
+     * 1、根据Mail去找有没这记录
+     * 2、有的话，则用秘钥+用户传递的明文密码，进行加密，再和数据库的密文进行匹配
+     *
+     * @param userLoginRequest
+     * @return
+     */
+    @Override
+    public JsonData login(UserLoginRequest userLoginRequest) {
+        List<UserDO> userDOList = userMapper.selectList(new QueryWrapper<UserDO>().eq("mail", userLoginRequest.getMail()));
+
+        if (userDOList != null && userDOList.size() == 1) {
+            //已经注册
+            UserDO userDO = userDOList.get(0);
+            String cryptPwd = Md5Crypt.md5Crypt(userLoginRequest.getPwd().getBytes(), userDO.getSecret());
+            if (cryptPwd.equals(userDO.getPwd())) {
+                //登录成功,生成token TODO
+                return JsonData.buildSuccess();
+            } else {
+                return JsonData.buildResult(BizCodeEnum.ACCOUNT_PWD_ERROR);
+            }
+        } else {
+            //未注册
+            return JsonData.buildResult(BizCodeEnum.ACCOUNT_UNREGISTER);
+        }
     }
 
     /**
@@ -88,8 +115,8 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     private boolean checkUnique(String mail) {
-
-        return false;
+        List<UserDO> list = userMapper.selectList(new QueryWrapper<UserDO>().eq("mail", mail));
+        return list.size() <= 0;
     }
 
 
