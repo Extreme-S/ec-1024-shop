@@ -75,7 +75,6 @@ public class CommonUtil {
             for (byte item : array) {
                 sb.append(Integer.toHexString((item & 0xFF) | 0x100).substring(1, 3));
             }
-
             return sb.toString().toUpperCase();
         } catch (Exception exception) {
         }

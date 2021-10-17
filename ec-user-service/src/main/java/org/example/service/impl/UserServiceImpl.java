@@ -1,6 +1,7 @@
 package org.example.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.Md5Crypt;
 import org.example.enums.BizCodeEnum;
 import org.example.enums.SendCodeEnum;
 import org.example.mapper.UserMapper;
@@ -8,12 +9,14 @@ import org.example.model.UserDO;
 import org.example.request.UserRegisterRequest;
 import org.example.service.NotifyService;
 import org.example.service.UserService;
+import org.example.util.CommonUtil;
 import org.example.util.JsonData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 
@@ -53,15 +56,18 @@ public class UserServiceImpl implements UserService {
 
         UserDO userDO = new UserDO();
         BeanUtils.copyProperties(registerRequest, userDO);
-
         userDO.setCreateTime(new Date());
         userDO.setSlogan("人生需要动态规划，学习需要贪心算法");
 
         //设置密码 TODO
         //userDO.setPwd(registerRequest.getPwd());
+        //生成用户的密钥盐
+        userDO.setSecret("$1$" + CommonUtil.getStringNumRandom(8));
+        //密码+盐 处理
+        String cryptPwd = Md5Crypt.md5Crypt(registerRequest.getPwd().getBytes(), userDO.getSecret());
+        userDO.setSecret(cryptPwd);
 
         //账号唯一性检查  TODO
-
         if (checkUnique(userDO.getMail())) {
             int rows = userMapper.insert(userDO);
             log.info("rows:{},注册成功:{}", rows, userDO.toString());
