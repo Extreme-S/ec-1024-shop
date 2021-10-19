@@ -2,17 +2,17 @@ package org.example.model;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
+
 import java.util.Date;
+
 import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.io.Serializable;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * <p>
- * 
- * </p>
- *
  * @author 不爱吃鱼的猫丶
  * @since 2021-10-03
  */
@@ -23,7 +23,7 @@ public class UserDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -56,6 +56,9 @@ public class UserDO implements Serializable {
      */
     private Integer points;
 
+    /**
+     * 创建时间
+     */
     private Date createTime;
 
     /**

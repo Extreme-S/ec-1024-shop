@@ -6,12 +6,14 @@ import org.apache.commons.codec.digest.Md5Crypt;
 import org.example.enums.BizCodeEnum;
 import org.example.enums.SendCodeEnum;
 import org.example.mapper.UserMapper;
+import org.example.model.LoginUser;
 import org.example.model.UserDO;
 import org.example.request.UserLoginRequest;
 import org.example.request.UserRegisterRequest;
 import org.example.service.NotifyService;
 import org.example.service.UserService;
 import org.example.util.CommonUtil;
+import org.example.util.JWTUtil;
 import org.example.util.JsonData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -93,17 +95,28 @@ public class UserServiceImpl implements UserService {
         List<UserDO> userDOList = userMapper.selectList(new QueryWrapper<UserDO>().eq("mail", userLoginRequest.getMail()));
 
         if (userDOList != null && userDOList.size() == 1) {
-            //已经注册
+            //已注册用户
             UserDO userDO = userDOList.get(0);
             String cryptPwd = Md5Crypt.md5Crypt(userLoginRequest.getPwd().getBytes(), userDO.getSecret());
             if (cryptPwd.equals(userDO.getPwd())) {
-                //登录成功,生成token TODO
-                return JsonData.buildSuccess();
+                //登录成功,生成token
+                LoginUser loginUser = new LoginUser();
+                BeanUtils.copyProperties(userDO, loginUser);
+                String token = JWTUtil.geneJsonWebToken(loginUser);
+
+                // accessToken
+                // accessToken的过期时间
+                // UUID生成一个token
+                //String refreshToken = CommonUtil.generateUUID();
+                //redisTemplate.opsForValue().set(refreshToken,"1",1000*60*60*24*30);
+
+                return JsonData.buildSuccess(token);
             } else {
+                //登陆失败
                 return JsonData.buildResult(BizCodeEnum.ACCOUNT_PWD_ERROR);
             }
         } else {
-            //未注册
+            //未注册用户
             return JsonData.buildResult(BizCodeEnum.ACCOUNT_UNREGISTER);
         }
     }

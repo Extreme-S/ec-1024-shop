@@ -12,7 +12,6 @@ import java.util.Date;
 @Slf4j
 public class JWTUtil {
 
-
     /**
      * token 过期时间，正常是7天，方便测试我们改为70
      */
@@ -31,7 +30,7 @@ public class JWTUtil {
     /**
      * subject
      */
-    private static final String SUBJECT = "ec_shop";
+    private static final String SUBJECT = "ec-1024-shop";
 
 
     /**
@@ -41,11 +40,9 @@ public class JWTUtil {
      * @return
      */
     public static String geneJsonWebToken(LoginUser loginUser) {
-
         if (loginUser == null) {
             throw new NullPointerException("loginUser对象为空");
         }
-
         String token = Jwts.builder().setSubject(SUBJECT)
                 //payload
                 .claim("head_img", loginUser.getHeadImg())
