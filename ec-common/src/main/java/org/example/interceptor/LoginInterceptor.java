@@ -55,10 +55,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
             //通过threadLocal传递用户登录信息
             threadLocal.set(loginUser);
-
-
             return true;
-
         }
 
 
