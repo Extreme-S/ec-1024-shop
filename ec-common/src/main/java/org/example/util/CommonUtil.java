@@ -133,6 +133,7 @@ public class CommonUtil {
         return saltString.toString();
     }
 
+
     /**
      * 响应json数据给前端
      *
@@ -140,17 +141,15 @@ public class CommonUtil {
      * @param obj
      */
     public static void sendJsonMessage(HttpServletResponse response, Object obj) {
-
         ObjectMapper objectMapper = new ObjectMapper();
         response.setContentType("application/json; charset=utf-8");
-
         try (PrintWriter writer = response.getWriter()) {
-
             writer.print(objectMapper.writeValueAsString(obj));
             response.flushBuffer();
-
         } catch (IOException e) {
             log.warn("响应json数据给前端异常:{}", e);
         }
     }
+
+
 }

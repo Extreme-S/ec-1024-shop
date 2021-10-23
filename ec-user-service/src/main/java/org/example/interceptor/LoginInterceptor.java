@@ -26,7 +26,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (accessToken == null) {
             accessToken = request.getParameter("token");
         }
-        if (StringUtils.isNotBlank(accessToken)) { //accessToken不为空
+        if (StringUtils.isNotBlank(accessToken)) {
             Claims claims = JWTUtil.checkJWT(accessToken);
             if (claims == null) {//未登录
                 CommonUtil.sendJsonMessage(response, JsonData.buildResult(BizCodeEnum.ACCOUNT_UNLOGIN));
