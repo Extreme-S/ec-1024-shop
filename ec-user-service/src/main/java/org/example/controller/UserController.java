@@ -10,6 +10,7 @@ import org.example.request.UserRegisterRequest;
 import org.example.service.FileService;
 import org.example.service.UserService;
 import org.example.util.JsonData;
+import org.example.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -72,9 +73,27 @@ public class UserController {
         return jsonData;
     }
 
-    //刷新token的方案
+    /**
+     * 用户个人信息查询
+     *
+     * @return
+     */
+    @ApiOperation("个人信息查询")
+    @GetMapping("detail") 
+    public JsonData detail() {
+        UserVO userVO = userService.findUserDetail();
+        return JsonData.buildSuccess(userVO);
+    }
+
+
+    /**
+     * 刷新token的方案
+     *
+     * @param param
+     * @return
+     */
     @PostMapping("refresh_token")
-    public JsonData getRefreshToken(Map<String,Object> param){
+    public JsonData getRefreshToken(Map<String, Object> param) {
 
         //先去redis,找refresh_token是否存在
         //refresh_token存在，解密accessToken
