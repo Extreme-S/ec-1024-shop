@@ -20,13 +20,5 @@ public class AddressTest {
     @Autowired
     private AddressService addressService;
 
-    @Test
-    public void testAddressDetail(){
-
-        AddressDO addressDO = addressService.detail(1L);
-        log.info(addressDO.toString());
-
-        Assert.assertNotNull(addressDO);
-    }
 
 }

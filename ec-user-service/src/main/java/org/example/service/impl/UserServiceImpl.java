@@ -44,16 +44,14 @@ public class UserServiceImpl implements UserService {
      * * 账号唯一性检查(TODO)
      * * 插入数据库
      * * 新注册用户福利发放(TODO)
-     *
-     * @param registerRequest
-     * @return
      */
     @Override
     public JsonData register(UserRegisterRequest registerRequest) {
         boolean checkCode = false;
         //校验验证码
         if (StringUtils.isNotBlank(registerRequest.getMail())) {
-            checkCode = notifyService.checkCode(SendCodeEnum.USER_REGISTER, registerRequest.getMail(), registerRequest.getCode());
+            checkCode = notifyService.checkCode(SendCodeEnum.USER_REGISTER, registerRequest.getMail(),
+                registerRequest.getCode());
         }
         if (!checkCode) {
             return JsonData.buildResult(BizCodeEnum.CODE_ERROR);
@@ -88,13 +86,11 @@ public class UserServiceImpl implements UserService {
     /**
      * 1、根据Mail去找有没这记录
      * 2、有的话，则用秘钥+用户传递的明文密码，进行加密，再和数据库的密文进行匹配
-     *
-     * @param userLoginRequest
-     * @return
      */
     @Override
     public JsonData login(UserLoginRequest userLoginRequest) {
-        List<UserDO> userDOList = userMapper.selectList(new QueryWrapper<UserDO>().eq("mail", userLoginRequest.getMail()));
+        List<UserDO> userDOList = userMapper.selectList(
+            new QueryWrapper<UserDO>().eq("mail", userLoginRequest.getMail()));
 
         if (userDOList != null && userDOList.size() == 1) {
             //已注册用户
@@ -125,8 +121,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 查找用户详情
-     *
-     * @return
      */
     @Override
     public UserVO findUserDetail() {
@@ -139,20 +133,16 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 校验用户账号唯一
-     *
-     * @param mail
-     * @return
      */
     private boolean checkUnique(String mail) {
-        List<UserDO> list = userMapper.selectList(new QueryWrapper<UserDO>().eq("mail", mail));
+        List<UserDO> list = userMapper.selectList(new QueryWrapper<UserDO>()
+            .eq("mail", mail));
         return list.size() <= 0;
     }
 
 
     /**
      * 用户注册，初始化福利信息 TODO
-     *
-     * @param userDO
      */
     private void userRegisterInitTask(UserDO userDO) {
 

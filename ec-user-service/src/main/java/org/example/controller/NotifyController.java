@@ -47,20 +47,15 @@ public class NotifyController {
 
     /**
      * 获取图形验证码
-     *
-     * @param request
-     * @param response
      */
     @ApiOperation("获取图形验证码")
     @GetMapping("captcha")
     public void getCaptcha(HttpServletRequest request, HttpServletResponse response) {
-
         String captchaText = captchaProducer.createText();
         log.info("图形验证码:{}", captchaText);
-
-        //redis存储验证码
-        redisTemplate.opsForValue().set(getCaptchaKey(request), captchaText, CAPTCHA_CODE_EXPIRED, TimeUnit.MILLISECONDS);
-
+        //存储
+        redisTemplate.opsForValue()
+            .set(getCaptchaKey(request), captchaText, CAPTCHA_CODE_EXPIRED, TimeUnit.MILLISECONDS);
         BufferedImage bufferedImage = captchaProducer.createImage(captchaText);
         ServletOutputStream outputStream = null;
         try {
@@ -73,25 +68,23 @@ public class NotifyController {
         }
     }
 
+
     /**
-     * 向邮箱发送验证码
+     * 发送验证码
      * 1、匹配图形验证码是否正常
      * 2、发送验证码
-     *
-     * @param to
-     * @param captcha
-     * @return
      */
     @ApiOperation("发送邮箱注册验证码")
     @GetMapping("send_code")
     public JsonData sendRegisterCode(@RequestParam(value = "to", required = true) String to,
-                                     @RequestParam(value = "captcha", required = true) String captcha,
-                                     HttpServletRequest request) {
+        @RequestParam(value = "captcha", required = true) String captcha,
+        HttpServletRequest request) {
         String key = getCaptchaKey(request);
         String cacheCaptcha = redisTemplate.opsForValue().get(key);
 
         //匹配图形验证码是否一样
-        if (captcha != null && captcha.equalsIgnoreCase(cacheCaptcha)) {
+        if (captcha != null && cacheCaptcha != null && captcha.equalsIgnoreCase(cacheCaptcha)) {
+            //成功
             redisTemplate.delete(key);
             JsonData jsonData = notifyService.sendCode(SendCodeEnum.USER_REGISTER, to);
             return jsonData;
@@ -101,23 +94,16 @@ public class NotifyController {
 
     }
 
-
     /**
-     * 根据用户ip和userAgent信息生成图形验证码的唯一key
-     *
-     * @param request
-     * @return
+     * 获取缓存的key
      */
     private String getCaptchaKey(HttpServletRequest request) {
-
         String ip = CommonUtil.getIpAddr(request);
         String userAgent = request.getHeader("User-Agent");
         String key = "user-service:captcha:" + CommonUtil.MD5(ip + userAgent);
-
         log.info("ip={}", ip);
         log.info("userAgent={}", userAgent);
         log.info("key={}", key);
-
         return key;
     }
 
