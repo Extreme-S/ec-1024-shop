@@ -53,9 +53,9 @@ public class NotifyController {
     public void getCaptcha(HttpServletRequest request, HttpServletResponse response) {
         String captchaText = captchaProducer.createText();
         log.info("图形验证码:{}", captchaText);
-        //存储
-        redisTemplate.opsForValue()
-            .set(getCaptchaKey(request), captchaText, CAPTCHA_CODE_EXPIRED, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(
+            getCaptchaKey(request), captchaText, CAPTCHA_CODE_EXPIRED, TimeUnit.MILLISECONDS);
+        // 输出流输出图片
         BufferedImage bufferedImage = captchaProducer.createImage(captchaText);
         ServletOutputStream outputStream = null;
         try {
@@ -70,28 +70,26 @@ public class NotifyController {
 
 
     /**
-     * 发送验证码
+     * 发送邮件验证码
      * 1、匹配图形验证码是否正常
-     * 2、发送验证码
+     * 2、发送邮件验证码
      */
     @ApiOperation("发送邮箱注册验证码")
     @GetMapping("send_code")
-    public JsonData sendRegisterCode(@RequestParam(value = "to", required = true) String to,
+    public JsonData sendRegisterCode(
+        @RequestParam(value = "to", required = true) String to,
         @RequestParam(value = "captcha", required = true) String captcha,
         HttpServletRequest request) {
+
         String key = getCaptchaKey(request);
         String cacheCaptcha = redisTemplate.opsForValue().get(key);
-
         //匹配图形验证码是否一样
-        if (captcha != null && cacheCaptcha != null && captcha.equalsIgnoreCase(cacheCaptcha)) {
-            //成功
+        if (captcha != null && captcha.equalsIgnoreCase(cacheCaptcha)) {
             redisTemplate.delete(key);
-            JsonData jsonData = notifyService.sendCode(SendCodeEnum.USER_REGISTER, to);
-            return jsonData;
+            return notifyService.sendCode(SendCodeEnum.USER_REGISTER, to);
         } else {
             return JsonData.buildResult(BizCodeEnum.CODE_CAPTCHA_ERROR);
         }
-
     }
 
     /**

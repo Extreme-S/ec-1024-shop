@@ -9,7 +9,8 @@ public class CheckUtil {
     /**
      * 邮箱正则
      */
-    private static final Pattern MAIL_PATTERN = Pattern.compile("^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
+    private static final Pattern MAIL_PATTERN = Pattern.compile(
+        "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
 
     /**
      * 手机号正则，暂时未用
@@ -17,8 +18,7 @@ public class CheckUtil {
     private static final Pattern PHONE_PATTERN = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
 
     /**
-     * @param email
-     * @return
+     * 判断是否是邮箱
      */
     public static boolean isEmail(String email) {
         if (null == email || "".equals(email)) {
@@ -29,10 +29,7 @@ public class CheckUtil {
     }
 
     /**
-     * 暂时未用
-     *
-     * @param phone
-     * @return
+     * 判断是否是电话号码
      */
     public static boolean isPhone(String phone) {
         if (null == phone || "".equals(phone)) {
@@ -40,6 +37,5 @@ public class CheckUtil {
         }
         Matcher m = PHONE_PATTERN.matcher(phone);
         return m.matches();
-
     }
 }

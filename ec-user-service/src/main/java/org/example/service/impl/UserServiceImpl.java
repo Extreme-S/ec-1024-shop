@@ -22,7 +22,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 
@@ -56,26 +55,19 @@ public class UserServiceImpl implements UserService {
         if (!checkCode) {
             return JsonData.buildResult(BizCodeEnum.CODE_ERROR);
         }
-
+        // 构造生成要插入数据库的userDo对象
         UserDO userDO = new UserDO();
         BeanUtils.copyProperties(registerRequest, userDO);
         userDO.setCreateTime(new Date());
         userDO.setSlogan("人生需要动态规划，学习需要贪心算法");
-
-        //设置密码 TODO
-        //userDO.setPwd(registerRequest.getPwd());
-        //生成用户的密钥盐
         userDO.setSecret("$1$" + CommonUtil.getStringNumRandom(8));
-        //密码+盐 处理
         String cryptPwd = Md5Crypt.md5Crypt(registerRequest.getPwd().getBytes(), userDO.getSecret());
-        userDO.setSecret(cryptPwd);
+        userDO.setPwd(cryptPwd);
 
-        //账号唯一性检查  TODO
-        if (checkUnique(userDO.getMail())) {
+        // 账号唯一性检查 TODO
+        if (checkMailUnique(userDO.getMail())) {
             int rows = userMapper.insert(userDO);
-            log.info("rows:{},注册成功:{}", rows, userDO.toString());
-
-            //新用户注册成功，初始化信息，发放福利等 TODO
+            // 新用户注册成功，初始化信息，发放福利等 TODO
             userRegisterInitTask(userDO);
             return JsonData.buildSuccess();
         } else {
@@ -134,9 +126,8 @@ public class UserServiceImpl implements UserService {
     /**
      * 校验用户账号唯一
      */
-    private boolean checkUnique(String mail) {
-        List<UserDO> list = userMapper.selectList(new QueryWrapper<UserDO>()
-            .eq("mail", mail));
+    private boolean checkMailUnique(String mail) {
+        List<UserDO> list = userMapper.selectList(new QueryWrapper<UserDO>().eq("mail", mail));
         return list.size() <= 0;
     }
 
