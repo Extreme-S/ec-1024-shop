@@ -142,7 +142,6 @@
         </dependencies>
     </dependencyManagement>
 
-
     <!-- 代码库 -->
     <repositories>
         <repository>
@@ -159,7 +158,6 @@
         </repository>
     </repositories>
 
-
     <pluginRepositories>
         <pluginRepository>
             <id>public</id>
@@ -173,7 +171,6 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
-
 
     <!--module不用添加打包版本信息-->
     <build>

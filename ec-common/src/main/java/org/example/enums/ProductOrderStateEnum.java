@@ -7,7 +7,6 @@ public enum ProductOrderStateEnum {
      */
     NEW,
 
-
     /**
      * 已经支付订单
      */
@@ -17,5 +16,4 @@ public enum ProductOrderStateEnum {
      * 超时取消订单
      */
     CANCEL;
-
 }

@@ -23,21 +23,20 @@ public class CouponController {
     @ApiOperation("分页查询优惠券")
     @GetMapping("page_coupon")
     public JsonData pageCouponList(
-        @ApiParam(value = "当前页") @RequestParam(value = "page", defaultValue = "1") int page,
-        @ApiParam(value = "每页显示多少条") @RequestParam(value = "size", defaultValue = "10") int size) {
+            @ApiParam(value = "当前页") @RequestParam(value = "page", defaultValue = "1") int page,
+            @ApiParam(value = "每页显示多少条") @RequestParam(value = "size", defaultValue = "10") int size) {
 
         Map<String, Object> pageMap = couponService.pageCouponActivity(page, size);
         return JsonData.buildSuccess(pageMap);
     }
-
-
+    
     /**
      * 领取优惠券
      */
     @ApiOperation("领取优惠券")
     @GetMapping("/add/promotion/{coupon_id}")
     public JsonData addPromotionCoupon(
-        @ApiParam(value = "优惠券id", required = true) @PathVariable("coupon_id") long couponId) {
+            @ApiParam(value = "优惠券id", required = true) @PathVariable("coupon_id") long couponId) {
 
         return (JsonData) couponService.addCoupon(couponId, CouponCategoryEnum.PROMOTION);
     }
