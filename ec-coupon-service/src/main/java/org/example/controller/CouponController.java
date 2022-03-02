@@ -29,7 +29,7 @@ public class CouponController {
         Map<String, Object> pageMap = couponService.pageCouponActivity(page, size);
         return JsonData.buildSuccess(pageMap);
     }
-    
+
     /**
      * 领取优惠券
      */
@@ -38,7 +38,7 @@ public class CouponController {
     public JsonData addPromotionCoupon(
             @ApiParam(value = "优惠券id", required = true) @PathVariable("coupon_id") long couponId) {
 
-        return (JsonData) couponService.addCoupon(couponId, CouponCategoryEnum.PROMOTION);
+        return couponService.addCoupon(couponId, CouponCategoryEnum.PROMOTION);
     }
 
 

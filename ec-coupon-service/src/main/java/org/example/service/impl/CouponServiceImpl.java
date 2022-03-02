@@ -28,13 +28,13 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
 @Service
 @Slf4j
 public class CouponServiceImpl implements CouponService {
-
 
     @Autowired
     private CouponMapper couponMapper;
@@ -50,16 +50,16 @@ public class CouponServiceImpl implements CouponService {
     public Map<String, Object> pageCouponActivity(int page, int size) {
         Page<CouponDO> pageInfo = new Page<>(page, size);
         IPage<CouponDO> couponDOIPage = couponMapper.selectPage(pageInfo, new QueryWrapper<CouponDO>()
-            .eq("publish", CouponPublishEnum.PUBLISH)
-            .eq("category", CouponCategoryEnum.PROMOTION)
-            .orderByDesc("create_time"));
+                .eq("publish", CouponPublishEnum.PUBLISH)
+                .eq("category", CouponCategoryEnum.PROMOTION)
+                .orderByDesc("create_time"));
         Map<String, Object> pageMap = new HashMap<>(3);
         //总条数
         pageMap.put("total_record", couponDOIPage.getTotal());
         //总页数
         pageMap.put("total_page", couponDOIPage.getPages());
         pageMap.put("current_data",
-            couponDOIPage.getRecords().stream().map(this::beanProcess).collect(Collectors.toList()));
+                couponDOIPage.getRecords().stream().map(this::beanProcess).collect(Collectors.toList()));
 
         return pageMap;
     }
@@ -76,12 +76,14 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public JsonData addCoupon(long couponId, CouponCategoryEnum category) {
         LoginUser loginUser = LoginInterceptor.threadLocal.get();
-        String lockKey = "lock:coupon:"+couponId;
+        String lockKey = "lock:coupon:" + couponId;
         RLock rLock = redissonClient.getLock(lockKey);
-        //多个线程进入，会阻塞等待释放锁
+        // 多个线程进入，会阻塞等待释放锁，默认30秒，有watch dog自动续期
         rLock.lock();
-        log.info("领劵接口加锁成功:{}",Thread.currentThread().getId());
-        try{
+        // 加锁10秒钟过期，没有watch dog功能，无法自动续期
+        // rLock.lock(10, TimeUnit.SECONDS);
+        log.info("领劵接口加锁成功:{}", Thread.currentThread().getId());
+        try {
             CouponDO couponDO = couponMapper.selectOne(new QueryWrapper<CouponDO>()
                     .eq("id", couponId)
                     .eq("category", category.name()));
@@ -137,8 +139,8 @@ public class CouponServiceImpl implements CouponService {
         }
         //用户是否超过限制
         int recordNum = couponRecordMapper.selectCount(new QueryWrapper<CouponRecordDO>()
-            .eq("coupon_id", couponDO.getId())
-            .eq("user_id", userId));
+                .eq("coupon_id", couponDO.getId())
+                .eq("user_id", userId));
         if (recordNum >= couponDO.getUserLimit()) {
             throw new BizException(BizCodeEnum.COUPON_OUT_OF_LIMIT);
         }
