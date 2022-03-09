@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.mapper.ProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.example.model.ProductDO">
+        <id column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="cover_img" property="coverImg" />
+        <result column="detail" property="detail" />
+        <result column="old_amount" property="oldAmount" />
+        <result column="amount" property="amount" />
+        <result column="stock" property="stock" />
+        <result column="create_time" property="createTime" />
+        <result column="lock_stock" property="lockStock" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, title, cover_img, detail, old_amount, amount, stock, create_time, lock_stock
+    </sql>
+
+</mapper>
