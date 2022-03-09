@@ -24,6 +24,8 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -74,6 +76,7 @@ public class CouponServiceImpl implements CouponService {
      * 始终要记得，羊毛党思维很厉害，社会工程学 应用的很厉害
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public JsonData addCoupon(long couponId, CouponCategoryEnum category) {
         LoginUser loginUser = LoginInterceptor.threadLocal.get();
         String lockKey = "lock:coupon:" + couponId;

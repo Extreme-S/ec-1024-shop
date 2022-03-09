@@ -70,7 +70,6 @@ public class CouponVO {
      */
     private Integer stock;
 
-
     /**
      * 满多少才可以使用
      */

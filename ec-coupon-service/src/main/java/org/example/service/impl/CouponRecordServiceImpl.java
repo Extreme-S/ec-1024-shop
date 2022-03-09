@@ -32,11 +32,13 @@ public class CouponRecordServiceImpl implements CouponRecordService {
         //封装分页信息
         Page<CouponRecordDO> pageInfo = new Page<>(page, size);
         IPage<CouponRecordDO> recordDOIPage = couponRecordMapper.selectPage(pageInfo, new QueryWrapper<CouponRecordDO>()
-                .eq("user_id", loginUser.getId()).orderByDesc("create_time"));
-        Map<String, Object> pageMap = new HashMap<>(3);
+                .eq("user_id", loginUser.getId())
+                .orderByDesc("create_time"));
+        HashMap<String, Object> pageMap = new HashMap<>(3);
         pageMap.put("total_record", recordDOIPage.getTotal());
         pageMap.put("total_page", recordDOIPage.getPages());
-        pageMap.put("current_data", recordDOIPage.getRecords().stream().map(obj -> beanProcess(obj)).collect(Collectors.toList()));
+        pageMap.put("current_data", recordDOIPage.getRecords().stream()
+                .map(this::beanProcess).collect(Collectors.toList()));
         return pageMap;
     }
 
@@ -44,7 +46,8 @@ public class CouponRecordServiceImpl implements CouponRecordService {
     public CouponRecordVO findById(long recordId) {
         LoginUser loginUser = LoginInterceptor.threadLocal.get();
         CouponRecordDO couponRecordDO = couponRecordMapper.selectOne(new QueryWrapper<CouponRecordDO>()
-                .eq("id", recordId).eq("user_id", loginUser.getId()));
+                .eq("id", recordId)
+                .eq("user_id", loginUser.getId()));
         if (couponRecordDO == null) {
             return null;
         }

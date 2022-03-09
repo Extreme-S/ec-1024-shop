@@ -7,17 +7,8 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- * <p>
- * 
- * </p>
- *
- * @author 二当家小D
- * @since 2021-02-07
- */
 @Data
 public class CouponRecordVO {
-
 
     private Long id;
 
@@ -26,7 +17,6 @@ public class CouponRecordVO {
      */
     @JsonProperty("coupon_id")
     private Long couponId;
-
 
     /**
      * 使用状态  可用 NEW,已使用USED,过期 EXPIRED;
@@ -55,14 +45,14 @@ public class CouponRecordVO {
     /**
      * 开始时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss",locale = "zh",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", locale = "zh", timezone = "GMT+8")
     @JsonProperty("start_time")
     private Date startTime;
 
     /**
      * 结束时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss",locale = "zh",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", locale = "zh", timezone = "GMT+8")
     @JsonProperty("end_time")
     private Date endTime;
 
@@ -82,6 +72,4 @@ public class CouponRecordVO {
      */
     @JsonProperty("condition_price")
     private BigDecimal conditionPrice;
-
-
 }
