@@ -15,6 +15,7 @@ import org.example.mapper.CouponRecordMapper;
 import org.example.model.CouponDO;
 import org.example.model.CouponRecordDO;
 import org.example.model.LoginUser;
+import org.example.request.NewUserCouponRequest;
 import org.example.service.CouponService;
 import org.example.util.CommonUtil;
 import org.example.util.JsonData;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -113,6 +115,28 @@ public class CouponServiceImpl implements CouponService {
         } finally {
             rLock.unlock();
             log.info("解锁成功");
+        }
+        return JsonData.buildSuccess();
+    }
+
+    /**
+     * 用户微服务调用的时候，没传递token
+     * 本地直接调用发放优惠券的方法，需要构造一个登录用户存储在threadlocal
+     */
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    @Override
+    public JsonData initNewUserCoupon(NewUserCouponRequest newUserCouponRequest) {
+        LoginUser loginUser = new LoginUser();
+        loginUser.setId(newUserCouponRequest.getUserId());
+        loginUser.setName(newUserCouponRequest.getName());
+        LoginInterceptor.threadLocal.set(loginUser);
+
+        //查询新用户有哪些优惠券
+        List<CouponDO> couponDOList = couponMapper.selectList(new QueryWrapper<CouponDO>()
+                .eq("category", CouponCategoryEnum.NEW_USER.name()));
+        for (CouponDO couponDO : couponDOList) {
+            //幂等操作，调用需要加锁
+            this.addCoupon(couponDO.getId(), CouponCategoryEnum.NEW_USER);
         }
         return JsonData.buildSuccess();
     }

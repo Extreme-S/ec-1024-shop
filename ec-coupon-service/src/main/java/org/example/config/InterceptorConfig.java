@@ -15,10 +15,10 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 
         registry.addInterceptor(new LoginInterceptor())
-            //拦截的路径
-            .addPathPatterns("/api/coupon/*/**", "/api/coupon_record/v1/*/**")
+                //拦截的路径
+                .addPathPatterns("/api/coupon/*/**", "/api/coupon_record/v1/*/**")
 
-            //排查不拦截的路径
-            .excludePathPatterns("/api/coupon/*/page_coupon");
+                //排除不拦截的路径
+                .excludePathPatterns("/api/coupon/*/page_coupon", "/api/coupon/*/new_user_coupon");
     }
 }

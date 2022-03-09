@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.example.enums.CouponCategoryEnum;
+import org.example.request.NewUserCouponRequest;
 import org.example.service.CouponService;
 import org.example.util.JsonData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,15 @@ public class CouponController {
             @ApiParam(value = "优惠券id", required = true) @PathVariable("coupon_id") long couponId) {
 
         return couponService.addCoupon(couponId, CouponCategoryEnum.PROMOTION);
+    }
+
+    /**
+     * 新用户注册发放优惠券接口
+     */
+    @ApiOperation("RPC-新用户注册接口")
+    @PostMapping("/new_user_coupon")
+    public JsonData addNewUserCoupon(@ApiParam("用户对象") @RequestBody NewUserCouponRequest newUserCouponRequest) {
+        return couponService.initNewUserCoupon(newUserCouponRequest);
     }
 
 
