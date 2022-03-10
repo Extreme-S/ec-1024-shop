@@ -103,12 +103,12 @@
             <artifactId>redisson</artifactId>
         </dependency>
 
-        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.alibaba/fastjson 引入阿里巴巴cloud后自带，TODO 可以删除这个包 &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.alibaba</groupId>-->
-        <!--            <artifactId>fastjson</artifactId>-->
-        <!--            <version>1.2.75</version>-->
-        <!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson 引入阿里巴巴cloud后自带，TODO 可以删除这个包 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.79</version>
+        </dependency>
 
 <!--        &lt;!&ndash;添加nacos客户端&ndash;&gt;-->
 <!--        <dependency>-->

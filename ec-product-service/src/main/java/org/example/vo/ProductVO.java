@@ -32,13 +32,13 @@ public class ProductVO {
     /**
      * 老价格
      */
-    @JsonProperty("old_price")
-    private BigDecimal oldPrice;
+    @JsonProperty("old_amount")
+    private BigDecimal oldAmount;
 
     /**
      * 新价格
      */
-    private BigDecimal price;
+    private BigDecimal amount;
 
     /**
      * 库存

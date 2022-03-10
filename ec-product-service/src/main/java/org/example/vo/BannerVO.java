@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class BannerVO {
 
-
     private Integer id;
 
     /**
