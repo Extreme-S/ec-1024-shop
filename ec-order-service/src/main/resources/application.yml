@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: ec-order-service
+  cloud:
+    #注册中心地址
+    nacos:
+      discovery:
+        server-addr: 47.101.187.117:8848
 
   #数据库配置
   datasource:

@@ -5,10 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.example.enums.BizCodeEnum;
 import org.example.enums.SendCodeEnum;
+import org.example.fegin.CouponFeignService;
 import org.example.interceptor.LoginInterceptor;
 import org.example.mapper.UserMapper;
 import org.example.model.LoginUser;
 import org.example.model.UserDO;
+import org.example.request.NewUserCouponRequest;
 import org.example.request.UserLoginRequest;
 import org.example.request.UserRegisterRequest;
 import org.example.service.NotifyService;
@@ -36,6 +38,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private CouponFeignService couponFeignService;
+
     /**
      * 用户注册
      * * 邮箱验证码验证
@@ -50,7 +55,7 @@ public class UserServiceImpl implements UserService {
         //校验验证码
         if (StringUtils.isNotBlank(registerRequest.getMail())) {
             checkCode = notifyService.checkCode(SendCodeEnum.USER_REGISTER, registerRequest.getMail(),
-                registerRequest.getCode());
+                    registerRequest.getCode());
         }
         if (!checkCode) {
             return JsonData.buildResult(BizCodeEnum.CODE_ERROR);
@@ -67,7 +72,7 @@ public class UserServiceImpl implements UserService {
         // 账号唯一性检查 TODO
         if (checkMailUnique(userDO.getMail())) {
             int rows = userMapper.insert(userDO);
-            // 新用户注册成功，初始化信息，发放福利等 TODO
+            // 新用户注册成功，初始化信息，发放福利等
             userRegisterInitTask(userDO);
             return JsonData.buildSuccess();
         } else {
@@ -82,7 +87,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public JsonData login(UserLoginRequest userLoginRequest) {
         List<UserDO> userDOList = userMapper.selectList(
-            new QueryWrapper<UserDO>().eq("mail", userLoginRequest.getMail()));
+                new QueryWrapper<UserDO>().eq("mail", userLoginRequest.getMail()));
 
         if (userDOList != null && userDOList.size() == 1) {
             //已注册用户
@@ -136,7 +141,11 @@ public class UserServiceImpl implements UserService {
      * 用户注册，初始化福利信息 TODO
      */
     private void userRegisterInitTask(UserDO userDO) {
-
+        NewUserCouponRequest request = new NewUserCouponRequest();
+        request.setName(userDO.getName());
+        request.setUserId(userDO.getId());
+        JsonData jsonData = couponFeignService.addNewUserCoupon(request);
+        log.info("发放新用户注册优惠券：{},结果:{}", request.toString(), jsonData.toString());
     }
 
 
