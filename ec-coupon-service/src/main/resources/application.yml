@@ -10,6 +10,18 @@ spring:
       discovery:
         server-addr: 47.101.187.117:8848
 
+  #rabbitMQ 消息队列配置
+  rabbitmq:
+    host: 47.101.187.117
+    port: 5672
+    virtual-host: /
+    username: admin
+    password: 2018LYW@#$
+    #开启手动确认消息
+    listener:
+      simple:
+        acknowledge-mode: manual
+
   #数据库配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
