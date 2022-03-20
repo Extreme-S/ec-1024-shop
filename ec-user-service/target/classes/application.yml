@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: ec-user-service
+  cloud:
+    #注册中心地址
+    nacos:
+      discovery:
+        server-addr: 47.101.187.117:8848
 
   #mysql 配置
   datasource:
@@ -49,3 +54,13 @@ aliyun:
     access-key-id: LTAI5tJhySosJJ6mywKKvWpz
     access-key-secret: gche18BvqBXgBjQll6OhOtbxkRRzxo
     bucketname: ec-1024-shop-img
+
+
+#seata配置
+seata:
+  tx-service-group: ${spring.application.name}-group
+  service:
+    grouplist:
+      ec: 47.101.187.117:8091
+    vgroup-mapping:
+      ec-user-service-group: ec

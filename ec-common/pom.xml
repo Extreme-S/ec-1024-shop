@@ -103,12 +103,12 @@
             <artifactId>redisson</artifactId>
         </dependency>
 
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.alibaba/fastjson 引入阿里巴巴cloud后自带，TODO 可以删除这个包 &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba</groupId>-->
-<!--            <artifactId>fastjson</artifactId>-->
-<!--            <version>1.2.79</version>-->
-<!--        </dependency>-->
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.alibaba/fastjson 引入阿里巴巴cloud后自带，TODO 可以删除这个包 &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alibaba</groupId>-->
+        <!--            <artifactId>fastjson</artifactId>-->
+        <!--            <version>1.2.79</version>-->
+        <!--        </dependency>-->
 
         <!--添加nacos客户端-->
         <dependency>
@@ -124,21 +124,21 @@
 
 
         <!--alibaba微服务整合分布式事务，这个方式才行-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.alibaba.cloud</groupId>-->
-        <!--            <artifactId>spring-cloud-starter-alibaba-seata</artifactId>-->
-        <!--            <exclusions>-->
-        <!--                <exclusion>-->
-        <!--                    <groupId>io.seata</groupId>-->
-        <!--                    <artifactId>seata-spring-boot-starter</artifactId>-->
-        <!--                </exclusion>-->
-        <!--            </exclusions>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>io.seata</groupId>-->
-        <!--            <artifactId>seata-spring-boot-starter</artifactId>-->
-        <!--            <version>1.3.0</version>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.seata</groupId>
+                    <artifactId>seata-spring-boot-starter</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.seata</groupId>
+            <artifactId>seata-spring-boot-starter</artifactId>
+            <version>1.3.0</version>
+        </dependency>
 
         <!--引入AMQP-->
         <dependency>

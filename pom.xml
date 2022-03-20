@@ -38,7 +38,7 @@
         <springfox.boot.starter.version>3.0.0</springfox.boot.starter.version>
 
         <!--打包用的-->
-        <docker.image.prefix>xdclass-cloud</docker.image.prefix>
+        <docker.image.prefix>ec-cloud</docker.image.prefix>
 
         <!--跳过单元测试-->
         <skipTests>true</skipTests>

@@ -1,6 +1,7 @@
 package org.example.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.example.enums.BizCodeEnum;
@@ -23,6 +24,8 @@ import org.example.vo.UserVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -50,6 +53,8 @@ public class UserServiceImpl implements UserService {
      * * 新注册用户福利发放(TODO)
      */
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+//    @GlobalTransactional
     public JsonData register(UserRegisterRequest registerRequest) {
         boolean checkCode = false;
         //校验验证码
@@ -74,6 +79,9 @@ public class UserServiceImpl implements UserService {
             int rows = userMapper.insert(userDO);
             // 新用户注册成功，初始化信息，发放福利等
             userRegisterInitTask(userDO);
+
+            //分布式事务，模拟异常
+//            int i = 1 / 0;
             return JsonData.buildSuccess();
         } else {
             return JsonData.buildResult(BizCodeEnum.ACCOUNT_REPEAT);

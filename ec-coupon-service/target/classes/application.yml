@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: ec-coupon-service
+  cloud:
+    #注册中心地址
+    nacos:
+      discovery:
+        server-addr: 47.101.187.117:8848
 
   #数据库配置
   datasource:
@@ -29,5 +34,15 @@ mybatis-plus:
 logging:
   level:
     root: INFO
+
+
+#seata配置
+seata:
+  tx-service-group: ${spring.application.name}-group
+  service:
+    grouplist:
+      ec: 47.101.187.117:8091
+    vgroup-mapping:
+      ec-coupon-service-group: ec
 
 

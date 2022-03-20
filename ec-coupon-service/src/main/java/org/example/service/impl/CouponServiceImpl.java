@@ -123,8 +123,8 @@ public class CouponServiceImpl implements CouponService {
      * 用户微服务调用的时候，没传递token
      * 本地直接调用发放优惠券的方法，需要构造一个登录用户存储在threadlocal
      */
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public JsonData initNewUserCoupon(NewUserCouponRequest newUserCouponRequest) {
         LoginUser loginUser = new LoginUser();
         loginUser.setId(newUserCouponRequest.getUserId());

@@ -36,3 +36,13 @@ logging:
     root: INFO
 
 
+#seata配置
+#seata:
+#  tx-service-group: ${spring.application.name}-group
+#  service:
+#    grouplist:
+#      ec: 47.101.187.117:8091
+#    vgroup-mapping:
+#      ec-coupon-service-group: ec
+
+

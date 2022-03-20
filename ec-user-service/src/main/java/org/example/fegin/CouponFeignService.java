@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "xdclass-coupon-service")
+@FeignClient(name = "ec-coupon-service")
 public interface CouponFeignService {
 
     /**
