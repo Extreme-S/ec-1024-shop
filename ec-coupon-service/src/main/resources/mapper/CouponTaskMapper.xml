@@ -16,4 +16,24 @@
         id, coupon_record_id, create_time, out_trade_no, lock_state
     </sql>
 
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List_No_Id">
+        coupon_record_id, create_time, out_trade_no, lock_state
+    </sql>
+
+    <!--批量插入-->
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into coupon_task
+        (<include refid="Base_Column_List_No_Id"/>)
+        values
+        <foreach collection="couponTaskList" item="item" index="index" separator=",">
+            (
+            #{item.couponRecordId},
+            #{item.createTime},
+            #{item.outTradeNo},
+            #{item.lockState}
+            )
+        </foreach>
+    </insert>
+
 </mapper>

@@ -1,4 +1,4 @@
-package net.xdclass.db;
+package org.example.db;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -31,21 +31,21 @@ public class MyBatisPlusGenerator {
                 //TODO  TODO  TODO  TODO
                 .setOutputDir("/Users/xdclass/Desktop/demo/src/main/java")
 
-                // 文件覆盖
-                .setFileOverride(true)
-
                 // 主键策略
                 .setIdType(IdType.AUTO)
+
+                // 文件覆盖
+                .setFileOverride(true)
 
                 .setDateType(DateType.ONLY_DATE)
                 // 设置生成的service接口的名字的首字母是否为I，默认Service是以I开头的
                 .setServiceName("%sService")
 
-                //生成基本的resultMap
-                .setBaseResultMap(true)
-
                 //实体类结尾名称
                 .setEntityName("%sDO")
+
+                //生成基本的resultMap
+                .setBaseResultMap(true)
 
                 //不使用AR模式
                 .setActiveRecord(false)
@@ -59,7 +59,7 @@ public class MyBatisPlusGenerator {
         dsConfig.setDbType(DbType.MYSQL)
                 .setDriverName("com.mysql.cj.jdbc.Driver")
                 //TODO  TODO  TODO  TODO
-                .setUrl("jdbc:mysql://127.0.0.1:3306/xdclass_order?useSSL=false")
+                .setUrl("jdbc:mysql://127.0.0.1:3306/xdclass_coupon?useSSL=false")
                 .setUsername("root")
                 .setPassword("xdclass.net");
 
@@ -79,7 +79,8 @@ public class MyBatisPlusGenerator {
 
                 // 生成的表, 支持多表一起生成，以数组形式填写
                 //TODO  TODO  TODO  TODO
-                .setInclude("product_order","product_order_item");
+                //.setInclude("coupon","coupon_record");
+                .setInclude("coupon_task");
 
         //4. 包名策略配置
         PackageConfig pkConfig = new PackageConfig();
