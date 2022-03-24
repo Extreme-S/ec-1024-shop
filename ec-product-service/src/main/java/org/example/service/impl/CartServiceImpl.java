@@ -106,25 +106,36 @@ public class CartServiceImpl implements CartService {
     }
 
 
+    /**
+     * 确认订单中的商品信息
+     */
+    @Override
+    public List<CartItemVO> confirmOrderCartItems(List<Long> productIdList) {
+        //获取购物车的全部购物项
+        List<CartItemVO> cartItemVOList = buildCartItem(true);
+        //根据需要的商品id进行过滤，并清空对应的购物项
+        List<CartItemVO> resultList = cartItemVOList.stream().filter(obj -> {
+            if (productIdList.contains(obj.getProductId())) {
+                this.deleteItem(obj.getProductId());
+                return true;
+            }
+            return false;
+        }).collect(Collectors.toList());
+        return resultList;
+    }
+
     @Override
     public CartVO getMyCart() {
-
         //获取全部购物项
         List<CartItemVO> cartItemVOList = buildCartItem(false);
-
-        //封装成cartvo
         CartVO cartVO = new CartVO();
         cartVO.setCartItems(cartItemVOList);
-
         return cartVO;
     }
 
 
     /**
      * 获取最新的购物项，
-     *
-     * @param latestPrice 是否获取最新价格
-     * @return
      */
     private List<CartItemVO> buildCartItem(boolean latestPrice) {
 

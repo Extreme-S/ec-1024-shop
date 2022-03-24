@@ -21,4 +21,29 @@
         id, product_order_id, out_trade_no, product_id, product_name, product_img, buy_num, create_time, total_amount, amount
     </sql>
 
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List_No_Id">
+        product_order_id, out_trade_no, product_id, product_name, product_img, buy_num, create_time, total_amount, amount
+    </sql>
+
+    <!--批量插入-->
+    <insert id="insertBatch">
+        insert into product_order_item
+        (<include refid="Base_Column_List_No_Id"/>)
+        values
+        <foreach collection="orderItemList" item="item" index="index" separator=",">
+            (
+            #{item.productOrderId},
+            #{item.outTradeNo},
+            #{item.productId},
+            #{item.productName},
+            #{item.productImg},
+            #{item.buyNum},
+            #{item.createTime},
+            #{item.totalAmount},
+            #{item.amount}
+            )
+        </foreach>
+    </insert>
+
 </mapper>
