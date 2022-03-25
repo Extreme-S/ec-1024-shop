@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.example.config.RabbitMQConfig;
 import org.example.enums.*;
 import org.example.exception.BizException;
 import org.example.feign.CouponFeignService;
@@ -13,6 +15,7 @@ import org.example.interceptor.LoginInterceptor;
 import org.example.mapper.ProductOrderItemMapper;
 import org.example.mapper.ProductOrderMapper;
 import org.example.model.LoginUser;
+import org.example.model.OrderMessage;
 import org.example.model.ProductOrderDO;
 import org.example.model.ProductOrderItemDO;
 import org.example.request.LockCouponRecordRequest;
@@ -25,6 +28,7 @@ import org.example.util.JsonData;
 import org.example.vo.CouponRecordVO;
 import org.example.vo.OrderItemVO;
 import org.example.vo.ProductOrderAddressVO;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +58,12 @@ public class ProductOrderServiceImpl implements ProductOrderService {
     @Autowired
     private CouponFeignService couponFeignService;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private RabbitMQConfig rabbitMQConfig;
+
 
     /**
      * * 防重提交
@@ -79,7 +89,8 @@ public class ProductOrderServiceImpl implements ProductOrderService {
         //获取用户加入购物车的商品
         List<Long> productIdList = orderRequest.getProductIdList();
         JsonData cartItemData = productFeignService.confirmOrderCartItem(productIdList);
-        List<OrderItemVO> orderItemList = cartItemData.getData(new TypeReference<>() {});
+        List<OrderItemVO> orderItemList = cartItemData.getData(new TypeReference<>() {
+        });
         log.info("获取的商品:{}", orderItemList);
         if (orderItemList == null) {
             //购物车商品不存在
@@ -96,7 +107,9 @@ public class ProductOrderServiceImpl implements ProductOrderService {
         //创建订单项
         this.saveProductOrderItems(orderOutTradeNo, productOrderDO.getId(), orderItemList);
         //发送延迟消息，用于自动关单 TODO
-
+        OrderMessage orderMessage = new OrderMessage();
+        orderMessage.setOutTradeNo(orderOutTradeNo);
+        rabbitTemplate.convertAndSend(rabbitMQConfig.getEventExchange(), rabbitMQConfig.getOrderCloseDelayRoutingKey(), orderMessage);
         //创建支付  TODO
 
         return null;
@@ -279,5 +292,37 @@ public class ProductOrderServiceImpl implements ProductOrderService {
         ProductOrderDO productOrderDO = productOrderMapper.selectOne(
                 new QueryWrapper<ProductOrderDO>().eq("out_trade_no", outTradeNo));
         return productOrderDO == null ? "" : productOrderDO.getState();
+    }
+
+    /**
+     * 定时关单
+     */
+    @Override
+    public boolean closeProductOrder(OrderMessage orderMessage) {
+        ProductOrderDO productOrderDO = productOrderMapper.selectOne(
+                new QueryWrapper<ProductOrderDO>().eq("out_trade_no", orderMessage.getOutTradeNo()));
+        if (productOrderDO == null) {
+            //订单不存在
+            log.warn("直接确认消息，订单不存在:{}", orderMessage);
+            return true;
+        }
+        if (productOrderDO.getState().equalsIgnoreCase(ProductOrderStateEnum.PAY.name())) {
+            //已经支付
+            log.info("直接确认消息,订单已经支付:{}", orderMessage);
+            return true;
+        }
+        //向第三方支付查询订单是否真的未支付  TODO
+        String payResult = "";
+        //结果为空，则未支付成功，本地取消订单
+        if (StringUtils.isBlank(payResult)) {
+            productOrderMapper.updateOrderPayState(productOrderDO.getOutTradeNo(), ProductOrderStateEnum.CANCEL.name(), ProductOrderStateEnum.NEW.name());
+            log.info("结果为空，则未支付成功，本地取消订单:{}", orderMessage);
+            return true;
+        } else {
+            //支付成功，主动的把订单状态改成UI就支付，造成该原因的情况可能是支付通道回调有问题
+            log.warn("支付成功，主动的把订单状态改成UI就支付，造成该原因的情况可能是支付通道回调有问题:{}", orderMessage);
+            productOrderMapper.updateOrderPayState(productOrderDO.getOutTradeNo(), ProductOrderStateEnum.PAY.name(), ProductOrderStateEnum.NEW.name());
+            return true;
+        }
     }
 }

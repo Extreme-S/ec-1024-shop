@@ -25,4 +25,11 @@
         id, out_trade_no, state, create_time, total_amount, pay_amount, pay_type, nickname, head_img, user_id, del, update_time, order_type, receiver_address
     </sql>
 
+    <!--更新订单状态-->
+    <update id="updateOrderPayState">
+        update product_order
+        set `state`=#{newState}
+        where out_trade_no = #{outTradeNo} and `state` = #{oldState}
+    </update>
+
 </mapper>
