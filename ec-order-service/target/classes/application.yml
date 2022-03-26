@@ -64,3 +64,11 @@ mqconfig:
   ttl: 15000
 
 
+#支付宝配置
+alipay:
+  #支付成功的跳转页面
+  success_return_url: https://xdclass.net
+  #支付宝通知回调接口
+  callback_url: https://xdclass.net
+
+
