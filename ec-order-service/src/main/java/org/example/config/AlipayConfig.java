@@ -4,7 +4,7 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 
 
-public class AlipayConfig {
+public class   AlipayConfig {
 
     /**
      * 支付宝网关地址  TODO
