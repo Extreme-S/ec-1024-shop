@@ -36,6 +36,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -324,5 +325,27 @@ public class ProductOrderServiceImpl implements ProductOrderService {
             productOrderMapper.updateOrderPayState(productOrderDO.getOutTradeNo(), ProductOrderStateEnum.PAY.name(), ProductOrderStateEnum.NEW.name());
             return true;
         }
+    }
+
+    /***
+     * 支付通知结果更新订单状态
+     */
+    @Override
+    public JsonData handlerOrderCallbackMsg(ProductOrderPayTypeEnum payType, Map<String, String> paramsMap) {
+        if (payType.name().equalsIgnoreCase(ProductOrderPayTypeEnum.ALIPAY.name())) {
+            //支付宝支付
+            //获取商户订单号
+            String outTradeNo = paramsMap.get("out_trade_no");
+            //交易的状态
+            String tradeStatus = paramsMap.get("trade_status");
+            if ("TRADE_SUCCESS".equalsIgnoreCase(tradeStatus) || "TRADE_FINISHED".equalsIgnoreCase(tradeStatus)) {
+                //更新订单状态
+                productOrderMapper.updateOrderPayState(outTradeNo, ProductOrderStateEnum.PAY.name(), ProductOrderStateEnum.NEW.name());
+                return JsonData.buildSuccess();
+            }
+        } else if (payType.name().equalsIgnoreCase(ProductOrderPayTypeEnum.WECHAT.name())) {
+            //微信支付  TODO
+        }
+        return JsonData.buildResult(BizCodeEnum.PAY_ORDER_CALLBACK_NOT_SUCCESS);
     }
 }

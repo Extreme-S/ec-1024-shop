@@ -1,8 +1,11 @@
 package org.example.service;
 
+import org.example.enums.ProductOrderPayTypeEnum;
 import org.example.model.OrderMessage;
 import org.example.request.ConfirmOrderRequest;
 import org.example.util.JsonData;
+
+import java.util.Map;
 
 
 public interface ProductOrderService {
@@ -21,4 +24,9 @@ public interface ProductOrderService {
      * 队列监听，定时关单
      */
     boolean closeProductOrder(OrderMessage orderMessage);
+
+    /**
+     * 支付结果回调通知
+     */
+    JsonData handlerOrderCallbackMsg(ProductOrderPayTypeEnum alipay, Map<String, String> paramsMap);
 }
