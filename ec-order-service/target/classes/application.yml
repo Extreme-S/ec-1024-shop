@@ -61,14 +61,14 @@ mqconfig:
   #消息过期，进入释放队列的key,进入死信队列的key
   order_close_routing_key: order.close.routing.key
   #消息过期时间,毫秒,测试改为15秒
-  ttl: 15000
+  ttl: 300000
 
 
 #支付宝配置
 alipay:
-  #支付成功的跳转页面
+  #支付成功后的跳转页面
   success_return_url: https://xdclass.net
   #支付宝通知回调接口
-  callback_url: https://xdclass.net
+  callback_url: https://7vtdb86pmr74.ngrok2.xiaomiqiu.cn/api/callback/order/v1/alipay
 
 

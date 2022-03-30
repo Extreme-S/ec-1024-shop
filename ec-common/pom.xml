@@ -124,21 +124,21 @@
 
 
         <!--alibaba微服务整合分布式事务，这个方式才行-->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>io.seata</groupId>
-                    <artifactId>seata-spring-boot-starter</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>io.seata</groupId>
-            <artifactId>seata-spring-boot-starter</artifactId>
-            <version>1.3.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-alibaba-seata</artifactId>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>io.seata</groupId>-->
+<!--                    <artifactId>seata-spring-boot-starter</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>io.seata</groupId>-->
+<!--            <artifactId>seata-spring-boot-starter</artifactId>-->
+<!--            <version>1.3.0</version>-->
+<!--        </dependency>-->
 
         <!--引入AMQP-->
         <dependency>

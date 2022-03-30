@@ -44,13 +44,13 @@ public class CouponRecordServiceImpl implements CouponRecordService {
     private CouponRecordMapper couponRecordMapper;
 
     @Autowired
+    private CouponTaskMapper couponTaskMapper;
+
+    @Autowired
     private RabbitTemplate rabbitTemplate;
 
     @Autowired
     private RabbitMQConfig rabbitMQConfig;
-
-    @Autowired
-    private CouponTaskMapper couponTaskMapper;
 
     @Autowired
     private ProductOrderFeignService orderFeignService;
