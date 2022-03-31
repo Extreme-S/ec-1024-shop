@@ -1,0 +1,58 @@
+server:
+  port: 8889
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 47.101.187.117:8848    #注册中心地址
+      config:
+        enabled: false
+
+    gateway:
+      routes: #数组形式
+        - id: product-service  #商品服务 路由唯一标识
+          uri: lb://ec-product-service  #从nacos进行转发
+          order: 1 #优先级，数字越小优先级越高
+          predicates: #断言 配置哪个路径才转发，前端访问路径统一加上XXX-server，网关判断转发对应的服务，如果是回调业务记得修改
+            - Path=/product-server/**
+          filters: #过滤器，请求在传递过程中通过过滤器修改
+            - StripPrefix=1  #去掉第一层前缀，转发给后续的路径
+
+        - id: user-service  #用户服务 路由唯一标识
+          uri: lb://ec-user-service  #从nacos进行转发
+          order: 2 #优先级，数字越小优先级越高
+          predicates: #断言 配置哪个路径才转发，前端访问路径统一加上XXX-server，网关判断转发对应的服务，如果是回调业务记得修改
+            - Path=/user-server/**
+          filters: #过滤器，请求在传递过程中通过过滤器修改
+            - StripPrefix=1  #去掉第一层前缀，转发给后续的路径
+
+        - id: coupon-service  #优惠券服务 路由唯一标识
+          uri: lb://ec-coupon-service  #从nacos进行转发
+          order: 3 #优先级，数字越小优先级越高
+          predicates: #断言 配置哪个路径才转发，前端访问路径统一加上XXX-server，网关判断转发对应的服务，如果是回调业务记得修改
+            - Path=/coupon-server/**
+          filters: #过滤器，请求在传递过程中通过过滤器修改
+            - StripPrefix=1  #去掉第一层前缀，转发给后续的路径
+
+        - id: order-service  #订单服务 路由唯一标识
+          uri: lb://ec-order-service  #从nacos进行转发
+          order: 3 #优先级，数字越小优先级越高
+          predicates: #断言 配置哪个路径才转发，前端访问路径统一加上XXX-server，网关判断转发对应的服务，如果是回调业务记得修改
+            - Path=/order-server/**
+          filters: #过滤器，请求在传递过程中通过过滤器修改
+            - StripPrefix=1  #去掉第一层前缀，转发给后续的路径
+
+      #开启网关拉取nacos的服务
+      discovery:
+        locator:
+          enabled: true
+
+#设置日志级别,ERROR/WARN/INFO/DEBUG,默认是INFO以上才显示
+logging:
+  level:
+    root: INFO
+    #nacos日志问题
+    com.alibaba.nacos.client.config.impl: WARN

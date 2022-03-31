@@ -357,7 +357,7 @@ public class ProductOrderServiceImpl implements ProductOrderService {
             return true;
         } else {
             //支付成功，主动的把订单状态改成UI就支付，造成该原因的情况可能是支付通道回调有问题
-            log.warn("支付成功，主动的把订单状态改成UI就支付，造成该原因的情况可能是支付通道回调有问题:{}", orderMessage);
+            log.warn("支付成功，主动的把订单状态改成PAY，造成该原因的情况可能是支付通道回调有问题:{}", orderMessage);
             productOrderMapper.updateOrderPayState(productOrderDO.getOutTradeNo(), ProductOrderStateEnum.PAY.name(), ProductOrderStateEnum.NEW.name());
             return true;
         }
